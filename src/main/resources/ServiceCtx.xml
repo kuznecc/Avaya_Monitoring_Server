@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:annotation-config/>
+
+
+    <bean id="propertyConfigurerAcmTelnetConnection" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location" value="classpath:production/acmTelnetConnection.properties"/>
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+    </bean>
+
+    <bean id="monitoringService" class="org.bober.avaya_monitoring.service.MonitoringService">
+        <lookup-method name="getPingTask" bean="pingTask" />
+        <lookup-method name="getSnmpCpuLoadTask" bean="snmpCpuLoadTask" />
+        <lookup-method name="getSnmpMemUsageTask" bean="snmpMemUsageTask" />
+        <lookup-method name="getSnmpVpmsChannelsUsageTask" bean="snmpVpmsChannelsUsageTask" />
+        <lookup-method name="getAcmTelnetBcmsVdnTask" bean="acmTelnetBcmsVdnTask" />
+        <lookup-method name="getAcmTelnetBcmsVdn24hTask" bean="acmTelnetBcmsVdn24hTask" />
+        <lookup-method name="getAcmTelnetBcmsTrunkTask" bean="acmTelnetBcmsTrunkTask" />
+        <lookup-method name="getAcmTelnetBcmsTrunk24hTask" bean="acmTelnetBcmsTrunk24hTask" />
+        <lookup-method name="getAcmTelnetLicenseUtilisationTask" bean="acmTelnetBcmsLicenseUtilisationTask" />
+    </bean>
+
+
+    <bean id="taskPool" class="org.bober.avaya_monitoring.service.TaskPool"/>
+
+
+    <bean id="pingTask" class="org.bober.avaya_monitoring.service.tasks.PingTask" scope="prototype">
+        <property name="checkResultDao" ref="serverPingResultDao"/>
+    </bean>
+    <bean id="snmpCpuLoadTask" class="org.bober.avaya_monitoring.service.tasks.CpuLoadTask" scope="prototype">
+        <property name="checkResultDao" ref="serverCpuLoadResultDao"/>
+    </bean>
+    <bean id="snmpMemUsageTask" class="org.bober.avaya_monitoring.service.tasks.MemUsageTask" scope="prototype">
+        <property name="checkResultDao" ref="serverMemLoadDao"/>
+    </bean>
+    <bean id="snmpVpmsChannelsUsageTask" class="org.bober.avaya_monitoring.service.tasks.VpmsChannelsUsageTask" scope="prototype">
+        <property name="checkResultDao" ref="snmpVpmsChannelsUsageDao"/>
+    </bean>
+    <bean id="acmTelnetBcmsVdnTask" class="org.bober.avaya_monitoring.service.tasks.AcmTelnetBcmsVdnTask" scope="prototype">
+        <property name="checkResultDao" ref="avayaParametersTelnetBcmsVdnResultDao"/>
+        <property name="acmTelnetConnection" ref="acmTelnetConnectionBcms"/>
+    </bean>
+    <bean id="acmTelnetBcmsVdn24hTask" class="org.bober.avaya_monitoring.service.tasks.AcmTelnetBcmsVdn24hTask" scope="prototype">
+        <property name="checkResultDao" ref="avayaParametersTelnetBcmsVdnResultDao"/>
+        <property name="acmTelnetConnection" ref="acmTelnetConnectionBcms"/>
+    </bean>
+    <bean id="acmTelnetBcmsTrunkTask" class="org.bober.avaya_monitoring.service.tasks.AcmTelnetBcmsTrunkTask" scope="prototype">
+        <property name="checkResultDao" ref="avayaParametersTelnetBcmsTrunkResultDao"/>
+        <property name="acmTelnetConnection" ref="acmTelnetConnectionBcms"/>
+    </bean>
+    <bean id="acmTelnetBcmsTrunk24hTask" class="org.bober.avaya_monitoring.service.tasks.AcmTelnetBcmsTrunk24hTask" scope="prototype">
+        <property name="checkResultDao" ref="avayaParametersTelnetBcmsTrunkResultDao"/>
+        <property name="acmTelnetConnection" ref="acmTelnetConnectionBcms"/>
+    </bean>
+    <bean id="acmTelnetBcmsLicenseUtilisationTask" class="org.bober.avaya_monitoring.service.tasks.AcmTelnetLicenseUtilisation" scope="prototype">
+        <property name="checkResultDao" ref="avayaParametersTelnetLicenseUtilisationResultDao"/>
+        <property name="acmTelnetConnection" ref="acmTelnetConnectionBcms"/>
+    </bean>
+
+
+    <!-- This is abstract template for all telnet connections to ACM server -->
+    <bean id="acmTelnetConnectionTemplate" abstract="true"
+          class="org.bober.avaya_monitoring.service.tasks.util.AcmTelnetConnection" >
+        <property name="telnetServerIp" value="${acmTelnetConnection.serverIp}"/>
+        <property name="telnetServerPort" value="${acmTelnetConnection.serverPort}"/>
+        <property name="telnetLogin" value="${acmTelnetConnection.login}"/>
+        <property name="telnetPassword" value="${acmTelnetConnection.password}"/>
+    </bean>
+
+    <!-- This bean must be used for all behavior with ACM telnet server
+            for asynchronously AcmTelnetScript execution -->
+    <bean id="acmTelnetConnection" parent="acmTelnetConnectionTemplate" scope="prototype"/>
+
+    <!-- This bean must be used for all bcms-statistics requests to acm server
+       For !Synchronously! AcmTelnetScript execution this prop must be set in all bcms-tasks :
+        <property name="acmTelnetConnection" ref="acmTelnetConnectionBcms"/> -->
+    <bean id="acmTelnetConnectionBcms" parent="acmTelnetConnectionTemplate"/>
+
+</beans>

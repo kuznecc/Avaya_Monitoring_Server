@@ -1,0 +1,24 @@
+# Mac
+
+*~ #(backup files)
+.swp # (vim swap files)
+*.DS_Store #(MacOS dir file)
+*.out #(any file with .out extension)
+
+
+# Intellij
+
+.idea/
+out/
+*.iml
+*.iws
+*.class
+
+# Maven
+
+log/
+target/
+
+
+# Project specific
+/src/main/resources/production/

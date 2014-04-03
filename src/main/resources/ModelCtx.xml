@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <bean id="propertyConfigurerDbConnection" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location" value="classpath:production/datasource.properties"/>
+    </bean>
+
+    <bean id="monitoringServiceDataSourcePool" class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="url" value="${jdbc.url}" />
+        <property name="driverClassName" value="${jdbc.driverClassName}" />
+        <property name="username" value="${jdbc.username}" />
+        <property name="password" value="${jdbc.password}" />
+        <property name="initialSize" value="5" />
+        <property name="maxActive" value="10" />
+    </bean>
+
+
+    <!-- This list consist all dao beans -->
+    <util:list id="daoList" list-class="java.util.ArrayList" value-type="org.bober.avaya_monitoring.model.dao.iAbstractDao">
+        <ref bean="serverDao"/>
+        <ref bean="avayaParameterDao"/>
+        <ref bean="serverPingConfigDao"/>
+        <ref bean="serverPingResultDao"/>
+        <ref bean="serverCpuLoadCheckConfigDao"/>
+        <ref bean="serverCpuLoadResultDao"/>
+        <ref bean="serverMemLoadCheckConfigDao"/>
+        <ref bean="serverMemLoadDao"/>
+        <ref bean="snmpVpmsChannelsUsageCheckCfgDao"/>
+        <ref bean="snmpVpmsChannelsUsageDao"/>
+        <ref bean="avayaParametersTelnetBcmsVdnCheckCfgDao"/>
+        <ref bean="avayaParametersTelnetBcmsVdnResultDao"/>
+        <ref bean="avayaParametersTelnetBcmsTrunkCheckCfgDao"/>
+        <ref bean="avayaParametersTelnetBcmsTrunkResultDao"/>
+        <ref bean="avayaParametersTelnetBcmsTrunkResultAllDao"/>
+        <ref bean="avayaParametersTelnetLicenseUtilisationCheckCfgDao"/>
+        <ref bean="avayaParametersTelnetLicenseUtilisationResultDao"/>
+    </util:list>
+
+    <!-- dao beans for all db tables -->
+    <bean id="abstractDaoJdbc" class="org.bober.avaya_monitoring.model.dao.impl.AbstractDaoJdbc" abstract="true">
+        <property name="dataSource" ref="monitoringServiceDataSourcePool"/>
+    </bean>
+
+    <bean id="serverDao" class="org.bober.avaya_monitoring.model.dao.impl.EntityServerDaoJdbc" parent="abstractDaoJdbc"/>
+
+    <bean id="avayaParameterDao" class="org.bober.avaya_monitoring.model.dao.impl.EntityAvayaParameterDaoJdbc" parent="abstractDaoJdbc"/>
+
+    <bean id="serverPingConfigDao" class="org.bober.avaya_monitoring.model.dao.impl.ConfigTableDaoJdbc" parent="abstractDaoJdbc">
+        <property name="dbTableName" value="servers_ping_cfg"/>
+    </bean>
+
+    <bean id="serverPingResultDao" class="org.bober.avaya_monitoring.model.dao.impl.ResultTableDaoJdbc" parent="abstractDaoJdbc">
+        <property name="dbTableName" value="servers_ping"/>
+    </bean>
+
+    <bean id="serverCpuLoadCheckConfigDao" class="org.bober.avaya_monitoring.model.dao.impl.ConfigTableDaoJdbc" parent="abstractDaoJdbc">
+        <property name="dbTableName" value="servers_cpu_load_check_cfg"/>
+    </bean>
+    <bean id="serverMemLoadCheckConfigDao" class="org.bober.avaya_monitoring.model.dao.impl.ConfigTableDaoJdbc" parent="abstractDaoJdbc">
+        <property name="dbTableName" value="servers_mem_load_check_cfg"/>
+    </bean>
+    <bean id="serverCpuLoadResultDao" class="org.bober.avaya_monitoring.model.dao.impl.ResultTableDaoJdbc" parent="abstractDaoJdbc">
+        <property name="dbTableName" value="servers_cpu_load"/>
+    </bean>
+    <bean id="serverMemLoadDao" class="org.bober.avaya_monitoring.model.dao.impl.ResultTableDaoJdbc" parent="abstractDaoJdbc">
+        <property name="dbTableName" value="servers_mem_load"/>
+    </bean>
+
+    <bean id="snmpVpmsChannelsUsageCheckCfgDao" class="org.bober.avaya_monitoring.model.dao.impl.ConfigTableDaoJdbc" parent="abstractDaoJdbc">
+        <property name="dbTableName" value="vpms_channels_usage_check_cfg"/>
+    </bean>
+    <bean id="snmpVpmsChannelsUsageDao" class="org.bober.avaya_monitoring.model.dao.impl.ResultTableDaoJdbc" parent="abstractDaoJdbc">
+        <property name="dbTableName" value="vpms_channels_usage"/>
+    </bean>
+
+    <bean id="avayaParametersTelnetBcmsVdnCheckCfgDao" class="org.bober.avaya_monitoring.model.dao.impl.ConfigTableDaoJdbc" parent="abstractDaoJdbc">
+        <property name="dbTableName" value="avaya_parameters_telnet_bcms_vdn_check_cfg"/>
+    </bean>
+    <bean id="avayaParametersTelnetBcmsVdnResultDao" class="org.bober.avaya_monitoring.model.dao.impl.ResultTableDaoJdbc" parent="abstractDaoJdbc">
+        <property name="dbTableName" value="avaya_parameters_telnet_bcms_vdn"/>
+        <property name="resultEntityDao" ref="avayaParameterDao"/>
+    </bean>
+
+    <bean id="avayaParametersTelnetBcmsTrunkCheckCfgDao" class="org.bober.avaya_monitoring.model.dao.impl.ConfigTableDaoJdbc" parent="abstractDaoJdbc">
+        <property name="dbTableName" value="avaya_parameters_telnet_bcms_trunk_check_cfg"/>
+    </bean>
+    <bean id="avayaParametersTelnetBcmsTrunkResultDao" class="org.bober.avaya_monitoring.model.dao.impl.ResultTableDaoJdbc" parent="abstractDaoJdbc">
+        <property name="dbTableName" value="avaya_parameters_telnet_bcms_trunk"/>
+        <property name="resultEntityDao" ref="avayaParameterDao"/>
+    </bean>
+
+    <bean id="avayaParametersTelnetLicenseUtilisationCheckCfgDao" class="org.bober.avaya_monitoring.model.dao.impl.ConfigTableDaoJdbc" parent="abstractDaoJdbc">
+        <property name="dbTableName" value="avaya_parameters_telnet_license_utilisation_check_cfg"/>
+    </bean>
+    <bean id="avayaParametersTelnetLicenseUtilisationResultDao" class="org.bober.avaya_monitoring.model.dao.impl.ResultTableDaoJdbc" parent="abstractDaoJdbc">
+        <property name="dbTableName" value="avaya_parameters_telnet_license_utilisation"/>
+        <property name="resultEntityDao" ref="avayaParameterDao"/>
+    </bean>
+
+    <bean id="avayaParametersTelnetBcmsTrunkResultAllDao" class="org.bober.avaya_monitoring.model.dao.impl.ResultTableDaoJdbc" parent="abstractDaoJdbc">
+        <property name="dbTableName" value="view_bcms_trunk_all"/>
+        <property name="resultEntityDao" ref="avayaParameterDao"/>
+    </bean>
+
+
+</beans>
