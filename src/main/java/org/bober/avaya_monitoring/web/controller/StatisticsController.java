@@ -50,18 +50,44 @@ public class StatisticsController {
     }
 
     /**
-     * Return data for N days. Doesn't work.
+     * Return data for N hours.
+     * @return if table consist CheckResult objects,
+     *      then return view 'checkResultToLineChart'
+     *      else - return view 'abstractEntityToTable'
      */
     @Deprecated
-    @RequestMapping(value = "/getForDays/{tableName}", method = RequestMethod.GET)
+    @RequestMapping(value = "/getForRange/{tableName}", method = RequestMethod.GET)
     public String returnDao(@PathVariable String tableName,
-                            @RequestParam("days") int days,
-                            @RequestParam("type") String type,
+                            @RequestParam("timeRangeCount") int timeRangeCount,
+                            @RequestParam("timeRangeType") String timeRangeType,
                             ModelMap model) {
         model.addAttribute("comment",
-                "received params : days=" + days + ", type=" + type + "<br>");
+                "received params : timeRangeCount=" + timeRangeCount + ", timeRangeType=" + timeRangeType + "<br>");
+        model.addAttribute("tableName", tableName);
 
-        addDataForPeriodToModel( tableName, days, model);
+        addDataForPeriodToModel(tableName, timeRangeCount, model);
+
+        int countInHours = 1;
+        switch (timeRangeType){
+            case ("week") :
+                countInHours *= 7;
+            case ("day") :
+                countInHours *= 24;
+            default: /* hour and other */
+                countInHours *= timeRangeCount;
+        };
+
+        List<AbstractEntity> entityList = null;
+
+        if (countInHours > 0){
+            entityList = addDataForPeriodToModel( tableName, countInHours, model);
+        }
+
+        // check results shown like a graph
+        if (entityList != null && entityList.size() >0 &&
+                entityList.get(0) instanceof CheckResult) {
+            return "checkResultToLineChart";
+        }
 
         return "abstractEntityToTable";
     }
@@ -149,10 +175,10 @@ public class StatisticsController {
 
         return null;
     }
-    private void addDataForPeriodToModel(String tableName, int days, ModelMap model){
+    private List<AbstractEntity> addDataForPeriodToModel(String tableName, int hours, ModelMap model){
         Date now = new Date();
-        Date sDate = new Date(now.getTime() - (days*1000*24*60*60) );
+        Date sDate = new Date(now.getTime() - (hours *60*60*1000) );
 
-        addDataForPeriodToModel( tableName, sDate, now, model );
+        return addDataForPeriodToModel( tableName, sDate, now, model );
     }
 }

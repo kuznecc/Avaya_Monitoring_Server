@@ -36,9 +36,22 @@
             <button id="chTableForPeriodBtn">Show</button>
         </td>
         <td>
-            days :
-            <input type="text" size="3" value="2" id="daysCount"/><br>
-            <button id="chTableForDayBtn">Show</button>  <br>
+            <table>
+                <tr>
+                    <td>
+                        count:<br>
+                        <input type="text" size="5" value="12" id="timeRangeCount"/><br>
+                        <button id="chTableForDayBtn">Show</button>  <br>
+                    </td>
+                    <td>
+                        <input type="radio" name="timeRangeType" value="hour" checked>hour<Br>
+                        <input type="radio" name="timeRangeType" value="day">day<Br>
+                        <input type="radio" name="timeRangeType" value="week">week<Br>
+                    </td>
+                </tr>
+            </table>
+
+
 
         </td>
     </tr>
@@ -94,9 +107,10 @@
 
     $('#chTableForDayBtn').click(function () {
         var params = jQuery.param({
-            days: $('#daysCount').val()
+            timeRangeCount: $('#timeRangeCount').val(),
+            timeRangeType: $('input:radio[name=timeRangeType]:checked').val()
         });
-        var url = "${pageContext.request.contextPath}/statistics/getForDays/" +
+        var url = "${pageContext.request.contextPath}/statistics/getForRange/" +
                 $("#tablesList option:selected").text() + "?" + params;
 
         loadPage('statisticPageLoadedContent', url);
