@@ -191,7 +191,7 @@ public class LineChart {
         for (CheckResult r: chartData) {
             if (r.getValue()!=null && r.getValue()>maxVal){
                 maxVal = r.getValue();
-                maxDate = r.getDate().getTime();
+                maxDate = getDateInMillisInUtc(r.getDate());
             }
         }
 
@@ -211,10 +211,24 @@ public class LineChart {
             if (!result.containsKey(chartName)){
                 result.put(chartName,new ArrayList<Coordinate<Number, Number>>());
             }
-            result.get(chartName).add( new Coordinate<Number, Number>(r.getDate().getTime(), r.getValue()) );
+
+            result.get(chartName).add( new Coordinate<Number, Number>(getDateInMillisInUtc(r.getDate()), r.getValue()) );
         }
 
         return result;
+    }
+
+    /*
+     *  This method prepare date in millis for HighChart which operates with datetime values in UTC.
+     *
+     *  So if we send to chart date in GMT format (default) then chart show date without Timezone offset.
+     *
+     *  For fix this issue we prepare date in millis, that include a timezone offset.
+     *
+     */
+    private static long getDateInMillisInUtc(final Date date){
+        final int timezoneOffsetInMillis = Math.abs(date.getTimezoneOffset())*60*1000;
+        return date.getTime() + timezoneOffsetInMillis;
     }
 
 }
