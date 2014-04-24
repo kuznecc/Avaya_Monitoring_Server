@@ -9,7 +9,6 @@ public class MathHelper {
 
     /**
      * Return sum of all list entries
-     * @param list
      * @return sum of all list entries
      */
     public static Integer getListSum(List<Integer> list){

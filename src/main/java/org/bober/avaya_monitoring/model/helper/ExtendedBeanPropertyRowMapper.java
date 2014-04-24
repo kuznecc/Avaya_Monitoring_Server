@@ -42,11 +42,9 @@ public class ExtendedBeanPropertyRowMapper<T> extends BeanPropertyRowMapper<T> {
         Class<?> requiredType = pd.getPropertyType();
         if (boolean.class.equals(requiredType) || Boolean.class.equals(requiredType)) {
             String stringValue = rs.getString(index);
-            if(stringValue!=null && !stringValue.equals("") &&
-                    TRUE_SET.contains(stringValue.toLowerCase())){
-                return true;
-            }
-            else return false;
+
+            return stringValue != null && !stringValue.equals("") &&
+                    TRUE_SET.contains(stringValue.toLowerCase());
         }
         return super.getColumnValue(rs, index, pd);
     }

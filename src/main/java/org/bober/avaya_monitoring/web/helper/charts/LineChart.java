@@ -129,7 +129,7 @@ public class LineChart {
         plotLines.add(plotLine);
 
         options.setxAxis(new Axis(AxisType.DATETIME)
-                .setMinRange(1 * 3600000)
+                .setMinRange(3600000)
                 .setTickPixelInterval(60)
                 .setTitle(null)
                 .setPlotLines(plotLines)

@@ -23,12 +23,13 @@ public class CmdExecutor {
 
     private static final Logger logger = LoggerFactory.getLogger("avayaMonTask");
     private void logAnError(String message, Exception e) {
-        logger.error(String.format("%s Error - %s - %s",
+        final String errorSrting = String.format("%s Error - %s - %s",
                 this.getClass().getSimpleName(),
                 message,
                 e.getClass().getName()
-        ));
-        System.err.println(e);
+        );
+        logger.error(errorSrting);
+        System.err.println(errorSrting);
     }
 
     private int exitCodeValue;
@@ -59,7 +60,7 @@ public class CmdExecutor {
         run();
         try{
             Thread.sleep(500);
-        } catch (Exception e){}
+        } catch (Exception ignored){}
     }
 
     private void run() {

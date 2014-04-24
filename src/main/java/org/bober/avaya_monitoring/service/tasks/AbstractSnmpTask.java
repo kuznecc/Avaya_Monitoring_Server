@@ -18,7 +18,7 @@ public abstract class AbstractSnmpTask extends AbstractTask {
     /**
      * Map of all CmdExecutor instances which have been created for specific entityId
      */
-    private static Map<Integer, CmdExecutor> executorMap = new HashMap<>();
+    private static final Map<Integer, CmdExecutor> executorMap = new HashMap<>();
 
     /**
      * If CmdExecutor for entityId already created, then return it from map.

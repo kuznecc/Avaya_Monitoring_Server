@@ -37,16 +37,18 @@ import java.util.regex.Pattern;
  * Class have public method for make telnet connection and execute prepared AcmTelnet script.
  * Public methods readUntil(...), write(...), nextPage() can be used in AcmTelnetScript logic.
  */
+@SuppressWarnings("FieldCanBeLocal")
 public class AcmTelnetConnection {
 
     private static final Logger logger = LoggerFactory.getLogger("avayaMonTask");
     private void logAnError(String message, Exception e) {
-        logger.error(String.format("%s Error - %s - %s",
+        final String errorString = String.format("%s Error - %s - %s",
                 this.getClass().getSimpleName(),
                 message,
                 e.getClass().getName()
-        ));
-        System.err.println(e);
+        );
+        logger.error(errorString);
+        System.err.println(errorString);
     }
 
     private String telnetServerIp;
@@ -177,7 +179,7 @@ public class AcmTelnetConnection {
     public String readUntil( int delay) {
         try {
             Thread.sleep(delay);
-        } catch (InterruptedException e) {
+        } catch (InterruptedException ignored) {
         }
 
         try {

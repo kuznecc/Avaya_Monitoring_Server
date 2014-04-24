@@ -40,15 +40,17 @@ public abstract class AbstractTask implements Runnable {
         logAnError(message,null);
     }
     protected void logAnError(String message, Exception e) {
-        logger.error(String.format("%s Error - %s - %s - %s",
+
+        final String errorString = String.format("%s Error - %s - %s - %s",
                 this.getClass().getSimpleName(),
                 getMonitoredEntity().getPrepareName(),
                 message,
-                (e!=null) ? e.getClass().getName() : ""
-        ));
+                (e != null) ? e.getClass().getName() : ""
+        );
 
-        if (e!=null)
-            System.err.println(e);
+        logger.error(errorString);
+
+        System.err.println(errorString);
     }
 
 

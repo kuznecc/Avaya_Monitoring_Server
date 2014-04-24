@@ -75,7 +75,7 @@ public class StatisticsController {
                 countInHours *= 24;
             default: /* hour and other */
                 countInHours *= timeRangeCount;
-        };
+        }
 
         List<AbstractEntity> entityList = null;
 
@@ -114,8 +114,7 @@ public class StatisticsController {
             sDate = DateHelper.dateParseFromMyJsFormat(startDate);
             eDate = DateHelper.dateParseFromMyJsFormat(endDate);
         } catch (ParseException e) {
-            System.err.println( e );
-            e.printStackTrace();
+            System.err.println("error through parsing receiving date. " + e);
         }
 
         List<AbstractEntity> entityList = null;

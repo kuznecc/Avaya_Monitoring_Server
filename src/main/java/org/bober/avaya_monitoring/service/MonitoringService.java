@@ -60,8 +60,6 @@ public class MonitoringService {
 
     /**
      * Method set config to task and schedule it in the task pool
-     * @param task
-     * @param checkConfig
      */
     private void pushTaskForCfg(AbstractTask task, CheckConfig checkConfig){
         task.setCheckCfg(checkConfig);
