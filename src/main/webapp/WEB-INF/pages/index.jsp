@@ -15,6 +15,7 @@
 
 
 <button id="statisticsPageBtn">* Statistics page *</button>
+<button id="configurationPageBtn">* Configuration page *</button>
 <button id="serviceControlsBtn">* Service controls *</button>
 
 <div id="indexPageLoadedContent"> - </div>
@@ -25,6 +26,11 @@
 
     $('#statisticsPageBtn').click(function () {
         var url = "${pageContext.request.contextPath}/statistics/getView";
+        loadPage('indexPageLoadedContent', url);
+    });
+
+    $('#configurationPageBtn').click(function () {
+        var url = "${pageContext.request.contextPath}/configuration/getView";
         loadPage('indexPageLoadedContent', url);
     });
 

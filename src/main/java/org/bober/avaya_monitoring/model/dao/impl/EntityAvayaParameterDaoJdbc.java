@@ -21,6 +21,11 @@ public class EntityAvayaParameterDaoJdbc extends AbstractDaoJdbc
     }
 
     @Override
+    public Class<AvayaParameter> getMonitoredEntityClass() {
+        return AvayaParameter.class;
+    }
+
+    @Override
     public AvayaParameter get(int id) {
         String sql = "SELECT * FROM " + getDbTableName() + " WHERE id=?";
 

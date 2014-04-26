@@ -27,9 +27,9 @@ import java.util.List;
 @RequestMapping("/statistics/")
 public class StatisticsController {
 
-    /* autowired list of all tables dao */
-    @Resource(name = "daoList")
-    private List<iAbstractDao> daoList;
+    /* autowired list of checkResult dao */
+    @Resource(name = "daoTaskResultList")
+    private List<iCheckResultDao> checkResultDaoList;
 
 
     /**
@@ -40,7 +40,7 @@ public class StatisticsController {
     @RequestMapping(value = "/getView",method = RequestMethod.GET)
     public String getView(ModelMap model){
         List<String> daoTableList = new ArrayList<String>();
-        for (iAbstractDao dao : daoList) {
+        for (iAbstractDao dao : checkResultDaoList) {
             daoTableList.add(dao.getDbTableName());
         }
 
@@ -142,7 +142,7 @@ public class StatisticsController {
     private List<AbstractEntity> getDataForPeriod(String tableName, Date sDate, Date eDate, ModelMap model){
         List<AbstractEntity> result = new ArrayList<>();
 
-        for (iAbstractDao dao : daoList) {
+        for (iAbstractDao dao : checkResultDaoList) {
             if ( tableName.equals(dao.getDbTableName()) ){
                 if (dao instanceof iCheckResultDao) {
                     return CollectionHelper.castList(AbstractEntity.class, ((iCheckResultDao) dao).get(sDate, eDate)) ;
@@ -156,7 +156,7 @@ public class StatisticsController {
     }
 
     private List<AbstractEntity> addDataForPeriodToModel(String tableName, Date sDate, Date eDate, ModelMap model){
-        for (iAbstractDao dao : daoList) {
+        for (iAbstractDao dao : checkResultDaoList) {
             List<AbstractEntity> entityList = null;
 
             if ( tableName.equals(dao.getDbTableName()) ){

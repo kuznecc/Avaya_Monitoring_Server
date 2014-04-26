@@ -15,4 +15,7 @@ public interface iMonitoredEntityDao<T extends AbstractMonitoredEntity> extends 
 
     public Map<Integer, T > getEntityMap();
 
+    /* return class of entity, which can be obtained by this dao */
+    public Class<T> getMonitoredEntityClass();
+
     }

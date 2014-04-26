@@ -21,6 +21,11 @@ public class EntityServerDaoJdbc extends AbstractDaoJdbc
     }
 
     @Override
+    public Class<Server> getMonitoredEntityClass() {
+        return Server.class;
+    }
+
+    @Override
     public Server get(int id) {
         String sql = "SELECT * FROM servers WHERE id=?";
 

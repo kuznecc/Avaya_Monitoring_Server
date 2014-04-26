@@ -27,19 +27,10 @@
             </select>
         </td>
         <td>
-            start date:
-            <input type="text" size="12" value="<%= today %>" id="startDate"/>
-            <input type="text" size="8" value="00:00:00" id="startDateTime"/><br>
-            end date :
-            <input type="text" size="12" value="<%= today %>" id="endDate"/>
-            <input type="text" size="8" value="23:59:00" id="endDateTime"/><br>
-            <button id="chTableForPeriodBtn">Show</button>
-        </td>
-        <td>
             <table>
                 <tr>
                     <td>
-                        count:<br>
+                        Range:<br>
                         <input type="text" size="5" value="12" id="timeRangeCount"/><br>
                         <button id="chTableForDayBtn">Show</button>  <br>
                     </td>
@@ -50,9 +41,15 @@
                     </td>
                 </tr>
             </table>
-
-
-
+        </td>
+        <td>
+            start date:
+            <input type="text" size="12" value="<%= today %>" id="startDate"/>
+            <input type="text" size="8" value="00:00:00" id="startDateTime"/><br>
+            end date :
+            <input type="text" size="12" value="<%= today %>" id="endDate"/>
+            <input type="text" size="8" value="23:59:00" id="endDateTime"/><br>
+            <button id="chTableForPeriodBtn">Show chart for specified period</button>
         </td>
     </tr>
 </table>

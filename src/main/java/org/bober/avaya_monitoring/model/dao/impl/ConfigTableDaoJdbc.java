@@ -1,13 +1,12 @@
 package org.bober.avaya_monitoring.model.dao.impl;
 
+import org.bober.avaya_monitoring.model.dao.iMonitoredEntityDao;
+import org.bober.avaya_monitoring.model.entity.AbstractMonitoredEntity;
 import org.bober.avaya_monitoring.model.helper.ExtendedBeanPropertyRowMapper;
 import org.bober.avaya_monitoring.model.dao.iCheckConfigDao;
 import org.bober.avaya_monitoring.model.entity.CheckConfig;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Dao-class for access to all db tables, that consist fields for CheckConfig entity.
@@ -15,26 +14,42 @@ import java.util.Map;
 public class ConfigTableDaoJdbc extends AbstractDaoJdbc
         implements iCheckConfigDao {
 
+    /* Dao that can return monitored entities, that will be checked in the task */
+    private iMonitoredEntityDao<AbstractMonitoredEntity> monitoredEntityDao;
+
     @Override
-    public CheckConfig get(int id) {
-        String sql = "SELECT * FROM " + getDbTableName() + " WHERE id=?";
-
-        CheckConfig record = getJdbcTemplate().queryForObject(
-                sql,
-                new Object[]{id},
-                new ExtendedBeanPropertyRowMapper<>(CheckConfig.class)
-        );
-
-        return record;
+    public void setMonitoredEntityDao(iMonitoredEntityDao<AbstractMonitoredEntity> monitoredEntityDao) {
+        this.monitoredEntityDao = monitoredEntityDao;
     }
+
+
+
+        @Override
+    public CheckConfig get(int id) {
+            String sql = "SELECT * FROM " + getDbTableName() + " WHERE id=?";
+
+            CheckConfig record = getJdbcTemplate().queryForObject(
+                    sql,
+                    new Object[]{id},
+                    new ExtendedBeanPropertyRowMapper<>(CheckConfig.class)
+            );
+
+            setMonitoredEntityForConfigObject(record);
+
+            return record;
+        }
 
     @Override
     public List<CheckConfig> getAll() {
         String sql = "SELECT * FROM " + getDbTableName();
 
-        return getJdbcTemplate().query(
+        final List<CheckConfig> checkConfigList = getJdbcTemplate().query(
                 sql,
                 new ExtendedBeanPropertyRowMapper<>(CheckConfig.class));
+
+        setMonitoredEntityForConfigObject(checkConfigList);
+
+        return checkConfigList;
     }
 
     @Override
@@ -98,4 +113,21 @@ public class ConfigTableDaoJdbc extends AbstractDaoJdbc
         return result;
     }
 
+    /**
+     * Method receive list of checkConfig instances, read .entityId, seek this entity by id in dao
+     * and add it to .setEntity(_entity_)
+     * @param checkConfigList list of prepared CheckConfig instances
+     */
+    private void setMonitoredEntityForConfigObject(List<CheckConfig> checkConfigList){
+        if (monitoredEntityDao==null || checkConfigList==null || checkConfigList.isEmpty()) return;
+
+        for (CheckConfig checkConfig : checkConfigList) {
+            final int entityId = checkConfig.getEntityId();
+            final AbstractMonitoredEntity monitoredEntity = monitoredEntityDao.get(entityId);
+            checkConfig.setEntity(monitoredEntity);
+        }
+    }
+    private void setMonitoredEntityForConfigObject(CheckConfig checkConfig){
+        setMonitoredEntityForConfigObject( new ArrayList<>(Arrays.asList(checkConfig)));
+    }
 }

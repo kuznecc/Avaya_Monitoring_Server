@@ -12,12 +12,26 @@ public class CheckConfig extends AbstractEntity {
     private boolean disabled;
     private  String description;
 
+    /**
+     * Entity object, that has been checked in the configured task
+     */
+    private AbstractMonitoredEntity entity;
+
+
     public int getEntityId() {
         return entityId;
     }
 
     public void setEntityId(int entityId) {
         this.entityId = entityId;
+    }
+
+    public AbstractMonitoredEntity getEntity() {
+        return entity;
+    }
+
+    public void setEntity(AbstractMonitoredEntity entity) {
+        this.entity = entity;
     }
 
     public String getAttributes() {
@@ -57,7 +71,7 @@ public class CheckConfig extends AbstractEntity {
     public String toString() {
         return "CheckConfig{" +
                 "id=" + getId() +
-                ", entityId=" + entityId +
+                ", entityId=" + entityId + ((entity == null) ? "" : "(" + entity.getName() + ")") +
                 ", attributes='" + attributes + "'" +
                 ", frequency=" + frequency +
                 ", disabled=" + disabled +
