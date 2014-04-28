@@ -27,7 +27,7 @@ public class ResultTableDaoJdbc extends AbstractDaoJdbc implements iCheckResultD
                 new ExtendedBeanPropertyRowMapper<>(CheckResult.class)
         );
 
-        applyServerProperty( result );
+        applyAdditionalProperty(result);
 
         return result;
     }
@@ -42,7 +42,7 @@ public class ResultTableDaoJdbc extends AbstractDaoJdbc implements iCheckResultD
                 new ExtendedBeanPropertyRowMapper<>(CheckResult.class)
         );
 
-        applyServerProperty( result );
+        applyAdditionalProperty(result);
 
         return result;
     }
@@ -56,7 +56,7 @@ public class ResultTableDaoJdbc extends AbstractDaoJdbc implements iCheckResultD
                 sql,
                 new ExtendedBeanPropertyRowMapper<>(CheckResult.class));
 
-        applyServerProperty( result );
+        applyAdditionalProperty(result);
 
         return result;
     }
@@ -72,18 +72,20 @@ public class ResultTableDaoJdbc extends AbstractDaoJdbc implements iCheckResultD
     }
 
     /* add server property to received CheckResult List by serverId property value */
-    private void applyServerProperty(List<CheckResult> pingResultList){
+    private void applyAdditionalProperty(List<CheckResult> checkResultList){
         Map<Integer, AbstractMonitoredEntity> serversMap = resultEntityDao.getEntityMap();
 
-        for (CheckResult checkResult : pingResultList) {
+        for (CheckResult checkResult : checkResultList) {
             AbstractMonitoredEntity entity = serversMap.get(checkResult.getEntityId());
             checkResult.setEntity(entity);
+            checkResult.setDbTableName(this.getDbTableName());
         }
     }
-    private void  applyServerProperty(CheckResult pingResult){
-        pingResult.setEntity(
-                resultEntityDao.get(pingResult.getEntityId())
+    private void applyAdditionalProperty(CheckResult checkResult){
+        checkResult.setEntity(
+                resultEntityDao.get(checkResult.getEntityId())
         );
+        checkResult.setDbTableName(this.getDbTableName());
     }
 
     @Override

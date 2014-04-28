@@ -5,6 +5,12 @@ function loadPage(target, urlToLoad) {
     $('#' + target).load(urlToLoad);
 }
 
+function replaceTagWithHtml(target, urlToLoad) {
+    $.get(urlToLoad, function(data) {
+        $("#"+target).replaceWith(data);
+    });
+}
+
 function getCurrentDate() {
     var today = new Date();
     var dd = today.getDate();

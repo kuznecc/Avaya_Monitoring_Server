@@ -1,5 +1,4 @@
 <%@ page import="java.util.List" %>
-<%@ page import="static org.bober.avaya_monitoring.model.helper.DateHelper.getCurrentDateInSqlFormat" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%

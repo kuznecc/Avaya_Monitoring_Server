@@ -9,12 +9,10 @@ import org.bober.avaya_monitoring.model.entity.CheckConfig;
 import org.bober.avaya_monitoring.model.entity.CheckResult;
 import org.bober.avaya_monitoring.model.helper.CollectionHelper;
 import org.bober.avaya_monitoring.model.helper.DateHelper;
+import org.bober.avaya_monitoring.web.helper.EntityToHtmlTableHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.text.ParseException;
@@ -100,8 +98,47 @@ public class ConfigController {
         return "checkResultEditorView";
     }
 
+    /**
+     * Return html-code of CheckConfig view-only table row
+     * @return raw html
+     */
+    @ResponseBody
+    @RequestMapping(value = "/getCheckConfigRow/{tableName}/{checkConfigId}", method = RequestMethod.GET)
+    public String getCheckConfigRow(@PathVariable String tableName,
+                                    @PathVariable int checkConfigId,
+                                    ModelMap model) {
+        for (iCheckConfigDao dao : checkConfigDaoList) {
+            if(dao.getDbTableName().equals(tableName)){
+                CheckConfig c = dao.get(checkConfigId);
+                return new EntityToHtmlTableHelper().checkConfigToHtmlTableRow(c);
+            }
+        }
+        return "Can't prepare edit row for (table:"+tableName+", id:"+checkConfigId +")";
+    }
+
+    /**
+     * Return html-code of CheckConfig editor table row
+     * @return raw html
+     */
+    @ResponseBody
+    @RequestMapping(value = "/getCheckConfigEditableRow/{tableName}/{checkConfigId}", method = RequestMethod.GET)
+    public String getCheckConfigEditableRow(@PathVariable String tableName,
+                                            @PathVariable int checkConfigId,
+                                            ModelMap model) {
+        for (iCheckConfigDao dao : checkConfigDaoList) {
+            if(dao.getDbTableName().equals(tableName)){
+                CheckConfig c = dao.get(checkConfigId);
+                return
+                        new EntityToHtmlTableHelper().checkConfigToHtmlTableEditableRow(
+                                c, getListOfAllMonitoredEntityForOneEntityInstance(c.getEntity())
+                        );
+            }
+        }
+        return "Can't prepare edit row for (table:"+tableName+", id:"+checkConfigId +")";
+    }
+
     /* This method return list of all monitored entities from specified dao
-        which was found by class type of received in argument monitored entity instance
+        which will be found by class type of received in argument monitored entity instance
     */
     private List<AbstractMonitoredEntity>
     getListOfAllMonitoredEntityForOneEntityInstance
@@ -125,5 +162,4 @@ public class ConfigController {
 
         return result;
     }
-
 }

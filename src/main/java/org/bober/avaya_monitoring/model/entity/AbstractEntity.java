@@ -5,7 +5,16 @@ package org.bober.avaya_monitoring.model.entity;
  */
 public abstract class AbstractEntity {
 
+    /**
+     * Name of table in the DB that consist this entity
+     */
+    private String dbTableName;
+
+    /**
+     * ID of this entity which equal primary key in the db table
+     */
     private int id;
+
 
     public int getId() {
         return id;
@@ -13,6 +22,14 @@ public abstract class AbstractEntity {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getDbTableName() {
+        return dbTableName;
+    }
+
+    public void setDbTableName(String dbTableName) {
+        this.dbTableName = dbTableName;
     }
 
     public abstract String toString();
