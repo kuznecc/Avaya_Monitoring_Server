@@ -35,6 +35,8 @@ public class EntityServerDaoJdbc extends AbstractDaoJdbc
                 new ExtendedBeanPropertyRowMapper<>(Server.class)
         );
 
+        record.setDbTableName(this.getDbTableName());
+
         return record;
     }
 
@@ -48,6 +50,8 @@ public class EntityServerDaoJdbc extends AbstractDaoJdbc
                 new ExtendedBeanPropertyRowMapper<>(Server.class)
         );
 
+        record.setDbTableName(this.getDbTableName());
+
         return record;
     }
 
@@ -58,6 +62,10 @@ public class EntityServerDaoJdbc extends AbstractDaoJdbc
         List<Server> servers = getJdbcTemplate().query(
                 sql,
                 new ExtendedBeanPropertyRowMapper<>(Server.class));
+
+        for (Server server : servers) {
+            server.setDbTableName(this.getDbTableName());
+        }
         return servers;
     }
 

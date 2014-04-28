@@ -35,6 +35,8 @@ public class EntityAvayaParameterDaoJdbc extends AbstractDaoJdbc
                 new ExtendedBeanPropertyRowMapper<>(AvayaParameter.class)
         );
 
+        record.setDbTableName(this.getDbTableName());
+
         return record;
     }
 
@@ -48,6 +50,8 @@ public class EntityAvayaParameterDaoJdbc extends AbstractDaoJdbc
                 new ExtendedBeanPropertyRowMapper<>(AvayaParameter.class)
         );
 
+        record.setDbTableName(this.getDbTableName());
+
         return record;
     }
 
@@ -58,6 +62,11 @@ public class EntityAvayaParameterDaoJdbc extends AbstractDaoJdbc
         List<AvayaParameter> parameters = getJdbcTemplate().query(
                 sql,
                 new ExtendedBeanPropertyRowMapper<>(AvayaParameter.class));
+
+        for (AvayaParameter avayaParameter : parameters) {
+            avayaParameter.setDbTableName(this.getDbTableName());
+        }
+
         return parameters;
     }
 

@@ -36,6 +36,8 @@ public class ConfigTableDaoJdbc extends AbstractDaoJdbc
 
             setMonitoredEntityForConfigObject(record);
 
+            record.setDbTableName(this.getDbTableName());
+
             return record;
         }
 
@@ -48,6 +50,10 @@ public class ConfigTableDaoJdbc extends AbstractDaoJdbc
                 new ExtendedBeanPropertyRowMapper<>(CheckConfig.class));
 
         setMonitoredEntityForConfigObject(checkConfigList);
+
+        for (CheckConfig checkConfig : checkConfigList) {
+            checkConfig.setDbTableName(this.getDbTableName());
+        }
 
         return checkConfigList;
     }

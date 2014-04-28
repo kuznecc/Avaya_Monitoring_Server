@@ -5,6 +5,12 @@ function loadPage(target, urlToLoad) {
     $('#' + target).load(urlToLoad);
 }
 
+function replaceTagWithHtml(target, urlToLoad) {
+    $.get(urlToLoad, function(data) {
+        $("#"+target).replaceWith(data);
+    });
+}
+
 function getCurrentDate() {
     var today = new Date();
     var dd = today.getDate();
@@ -19,4 +25,24 @@ function getCurrentDate() {
     }
     today = mm + '/' + dd + '/' + yyyy;
     return today;
+}
+
+function disableButtonsInDivWithText(divId, buttonsText) {
+    $("#" + divId).find(":button").each(
+        function () {
+            if ($(this).text() === buttonsText) {
+                $(this).attr("disabled", "disabled");
+            }
+        }
+    );
+}
+
+function enableButtonsInDivWithText(divId, buttonsText) {
+    $("#" + divId).find(":button").each(
+        function () {
+            if ($(this).text() === buttonsText) {
+                $(this).removeAttr("disabled");
+            }
+        }
+    );
 }
