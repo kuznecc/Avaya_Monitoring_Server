@@ -10,6 +10,8 @@ public class AvayaParameter extends AbstractMonitoredEntity {
     String subSystem;
     int serverId;
 
+    Server server;
+
     public AvayaParameter(){ }
 
     public AvayaParameter(String name, int serverId) {
@@ -31,6 +33,14 @@ public class AvayaParameter extends AbstractMonitoredEntity {
 
     public void setServerId(int serverId) {
         this.serverId = serverId;
+    }
+
+    public Server getServer() {
+        return server;
+    }
+
+    public void setServer(Server server) {
+        this.server = server;
     }
 
     @Override

@@ -22,9 +22,11 @@ public class ConfigTableDaoJdbc extends AbstractDaoJdbc
         this.monitoredEntityDao = monitoredEntityDao;
     }
 
+    public iMonitoredEntityDao<AbstractMonitoredEntity> getMonitoredEntityDao() {
+        return monitoredEntityDao;
+    }
 
-
-        @Override
+    @Override
     public CheckConfig get(int id) {
             String sql = "SELECT * FROM " + getDbTableName() + " WHERE id=?";
 

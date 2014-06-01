@@ -34,6 +34,19 @@
         <ref bean="avayaParametersTelnetLicenseUtilisationCheckCfgDao"/>
     </util:list>
 
+    <!-- This list consist all entity dao beans -->
+    <util:list id="allConfigurableEntitiesDaoList" list-class="java.util.ArrayList" value-type="org.bober.avaya_monitoring.model.dao.iAbstractDao">
+        <ref bean="serverDao"/>
+        <ref bean="avayaParameterDao"/>
+        <ref bean="serverPingConfigDao"/>
+        <ref bean="serverCpuLoadCheckConfigDao"/>
+        <ref bean="serverMemLoadCheckConfigDao"/>
+        <ref bean="snmpVpmsChannelsUsageCheckCfgDao"/>
+        <ref bean="avayaParametersTelnetBcmsVdnCheckCfgDao"/>
+        <ref bean="avayaParametersTelnetBcmsTrunkCheckCfgDao"/>
+        <ref bean="avayaParametersTelnetLicenseUtilisationCheckCfgDao"/>
+    </util:list>
+
     <!-- This list consist taskResult all dao beans -->
     <util:list id="daoTaskResultList" list-class="java.util.ArrayList" value-type="org.bober.avaya_monitoring.model.dao.iCheckResultDao">
         <ref bean="serverPingResultDao"/>

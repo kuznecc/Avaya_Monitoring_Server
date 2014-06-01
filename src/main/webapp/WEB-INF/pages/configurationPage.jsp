@@ -37,7 +37,7 @@
 <script type="text/javascript">
 
     $('#chTableForPeriodBtn').click(function () {
-        var url = "${pageContext.request.contextPath}/configuration/showTable/" +
+        var url = "${pageContext.request.contextPath}/configuration/getTable/" +
                 $("#tablesList option:selected").text();
 
         loadPage('configurationPageLoadedContent', url);

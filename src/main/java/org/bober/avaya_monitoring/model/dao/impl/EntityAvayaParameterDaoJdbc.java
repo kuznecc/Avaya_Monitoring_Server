@@ -1,20 +1,23 @@
 package org.bober.avaya_monitoring.model.dao.impl;
 
 
+import org.bober.avaya_monitoring.model.entity.Server;
 import org.bober.avaya_monitoring.model.helper.ExtendedBeanPropertyRowMapper;
 import org.bober.avaya_monitoring.model.dao.iMonitoredEntityDao;
 import org.bober.avaya_monitoring.model.entity.AvayaParameter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.annotation.Resource;
+import java.util.*;
 
 /**
  * Dao-class for access to 'avaya_parameters' db tables, that consist fields for AvayaParameter entity.
  */
 public class EntityAvayaParameterDaoJdbc extends AbstractDaoJdbc
         implements iMonitoredEntityDao<AvayaParameter> {
+
+
+    @Resource(name="serverDao")
+    private iMonitoredEntityDao<Server> serverDao;
 
     {
         setDbTableName("avaya_parameters");
@@ -37,6 +40,8 @@ public class EntityAvayaParameterDaoJdbc extends AbstractDaoJdbc
 
         record.setDbTableName(this.getDbTableName());
 
+        establishServerEntityToAvayaParameterInstance(record);
+
         return record;
     }
 
@@ -51,6 +56,8 @@ public class EntityAvayaParameterDaoJdbc extends AbstractDaoJdbc
         );
 
         record.setDbTableName(this.getDbTableName());
+
+        establishServerEntityToAvayaParameterInstance(record);
 
         return record;
     }
@@ -67,8 +74,43 @@ public class EntityAvayaParameterDaoJdbc extends AbstractDaoJdbc
             avayaParameter.setDbTableName(this.getDbTableName());
         }
 
+        establishServerEntityToAvayaParameterInstance(parameters);
+
         return parameters;
     }
+
+    /**
+     * This method add to AvayaParameter instance Server entity according to serverId
+     *
+     * @param avayaParameterList list of AvayaParameter
+     */
+    private void establishServerEntityToAvayaParameterInstance(List<AvayaParameter> avayaParameterList) {
+        if (avayaParameterList == null || serverDao==null) return;
+
+        List<Server> serverList = serverDao.getAll();
+
+        for (AvayaParameter avayaParameter : avayaParameterList) {
+            int srvId = avayaParameter.getServerId();
+            for (Server server : serverList) {
+                if (server.getId() == srvId){
+                    avayaParameter.setServer(server);
+                }
+            }
+        }
+    }
+
+    private void establishServerEntityToAvayaParameterInstance(AvayaParameter avayaParameter) {
+        Server server = null;
+
+        try {
+            server = serverDao.get(avayaParameter.getServerId());
+        } catch (Exception ignored) { }
+
+        if (server!=null) {
+            avayaParameter.setServer( server);
+        }
+    }
+
 
     /* Get map of all AvayaParameters {srvId, parameter} */
     @Override

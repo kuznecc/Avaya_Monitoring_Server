@@ -12,4 +12,5 @@ public interface iCheckConfigDao extends iAbstractDao<CheckConfig> {
     /* Set dao that can return monitored entities, that will be checked in the task */
     public void setMonitoredEntityDao(iMonitoredEntityDao<AbstractMonitoredEntity> monitoredEntityDao);
 
+    public iMonitoredEntityDao<AbstractMonitoredEntity> getMonitoredEntityDao();
 }
