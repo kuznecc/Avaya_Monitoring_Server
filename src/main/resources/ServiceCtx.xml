@@ -8,7 +8,7 @@
 
 
     <bean id="propertyConfigurerAcmTelnetConnection" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="location" value="classpath:production/acmTelnetConnection.properties"/>
+        <property name="location" value="classpath:prod/acmTelnetConnection.properties"/>
         <property name="ignoreUnresolvablePlaceholders" value="true"/>
     </bean>
 

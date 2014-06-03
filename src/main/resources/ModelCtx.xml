@@ -4,7 +4,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
     <bean id="propertyConfigurerDbConnection" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="location" value="classpath:production/datasource.properties"/>
+        <property name="location" value="classpath:${environment.name}/datasource.properties"/>
     </bean>
 
     <bean id="monitoringServiceDataSourcePool" class="org.apache.commons.dbcp.BasicDataSource">

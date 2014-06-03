@@ -21,4 +21,4 @@ target/
 
 
 # Project specific
-/src/main/resources/production/
+/src/main/resources/prod/
