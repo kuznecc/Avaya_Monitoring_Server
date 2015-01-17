@@ -2,6 +2,7 @@ package org.bober.avaya_monitoring.web.controller;
 
 import org.bober.avaya_monitoring.model.dao.iAbstractDao;
 import org.bober.avaya_monitoring.model.dao.iCheckConfigDao;
+import org.bober.avaya_monitoring.model.dao.iMonitoredEntityDao;
 import org.bober.avaya_monitoring.model.entity.*;
 import org.bober.avaya_monitoring.model.helper.CollectionHelper;
 import org.bober.avaya_monitoring.web.helper.ConfigurationPageTableHelper;
@@ -103,6 +104,20 @@ public class ConfigurationController {
                 iCheckConfigDao dao = (iCheckConfigDao) obj;
                 if (dao.getDbTableName().equals(tableName)){
                     specifiedDao = dao;
+                    break;
+                }
+            }
+        }
+        return specifiedDao;
+    }
+
+    private Object getDaoObjectForTableName(String tableName) {
+        Object specifiedDao = null;
+        for (Object obj : allConfigurableEntitiesDaoList) {
+            if (obj instanceof iAbstractDao){
+                iAbstractDao abstractDao = (iAbstractDao) obj;
+                if (abstractDao.getDbTableName().equals(tableName)){
+                    specifiedDao = obj;
                     break;
                 }
             }
@@ -333,7 +348,7 @@ public class ConfigurationController {
                                      @RequestParam(URL_PROPERTY_SERVER_SNMP_COMMUNITY) String snmpCommunity,
                                      @RequestParam(URL_PROPERTY_SERVER_OS_TYPE) String osType,
                                      @RequestParam(URL_PROPERTY_DESCRIPTION) String description) {
-        // name=kv-vpms-02&deleted=false&srvIp=10.7.1.62&srvSnmpCommunity=PUBLIC_COMMON&srvOsType=linux&description=
+        /* create new server instance */
         final Server server = new Server();
         server.setDbTableName(tableName);
         server.setName(name);
@@ -343,7 +358,22 @@ public class ConfigurationController {
         server.setOsType(osType);
         server.setDescription(description);
 
-        return "in future new entity will be uploaded to BD\n" + server.toString();
+        /* seeking for a specified dao */
+        iMonitoredEntityDao<Server> serverDao = null;
+        final Object daoByTableName = getDaoObjectForTableName(tableName);
+
+        if (daoByTableName != null &&
+                daoByTableName instanceof iMonitoredEntityDao){
+                serverDao = (iMonitoredEntityDao<Server>) daoByTableName;
+        }
+
+        if (serverDao == null){
+            return "ERROR: Can't find dao for table '"+tableName+"'\n" + server.toString();
+        }
+
+        serverDao.create(server);
+
+        return "New server entity is uploaded to BD\n" + server.toString();
     }
 
     /**

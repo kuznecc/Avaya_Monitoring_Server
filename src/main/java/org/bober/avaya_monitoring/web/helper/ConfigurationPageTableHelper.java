@@ -130,12 +130,14 @@ public class ConfigurationPageTableHelper {
         }
 
         String addBtnLogicUrl = String.format(URL_ADD_NEW_ROW_PATTERN, entityType, tableName),
-                addBtnLogic = "<script type=\"text/javascript\">$('#" + BTN_ADD_ROW_ID + "').click(function(){" +
-                        "$(\"#"+ DIV_ID_CACHE +"\").load('" + addBtnLogicUrl + "', function(data){" +
-                        "$(\"#" + getTableId(tableName) + " tr:last\").before('<tr id=" + TR_ID_NEW_ROW + "></tr>');" +
-                        "$(\"#" + TR_ID_NEW_ROW + "\").replaceWith(data);" +
+                addBtnLogic =
+                String.format("<script type=\"text/javascript\">$('#%s').click(function(){", BTN_ADD_ROW_ID) +
+                        String.format("$(\"#%s\").load('%s', function(data){", DIV_ID_CACHE, addBtnLogicUrl) +
+                        String.format("$(\"#%s tr:last\").before('<tr id=%s></tr>');", getTableId(tableName), TR_ID_NEW_ROW) +
+                        String.format("$(\"#%s\").replaceWith(data);", TR_ID_NEW_ROW) +
                         disableAddBtnJsCode +
-                        "disableButtonsInDivWithText('" + PARENT_DIV_ID + "' ,'"+BTN_EDIT_TEXT+"');});});</script>";
+                        String.format("disableButtonsInDivWithText('%s' ,'%s');", PARENT_DIV_ID, BTN_EDIT_TEXT)+
+                        "}); });</script>";
 
         result.append(addBtnLogic)
                 .append("</tr>");
@@ -602,10 +604,10 @@ public class ConfigurationPageTableHelper {
                 /* reload table with checkConfigs and enable all 'edit'-buttons */
         String getTableUrl = String.format(URL_GET_TABLE_PATTERN, entity.getDbTableName()),
                 btnSavePattern =
-                        String.format("var url = '%s?' +getUrlParamsForEditorRow();", btnSaveLinkUrlPattern) +
-                        "$.get(url, function( data ) {alert( data );});" +
+                        String.format("var url = '%s?' + getUrlParamsForEditorRow();", btnSaveLinkUrlPattern) +
+                        String.format("$.get(url, function( data ) {alert( data );});") +
                         String.format("var url = '%s';", getTableUrl) +
-                        String.format("loadPage('%s', url);", PARENT_DIV_ID) +
+                        String.format("replaceTagWithHtml('%s', url);", PARENT_DIV_ID) +
                         String.format("enableButtonsInDivWithText('%s' ,'%s');", PARENT_DIV_ID, BTN_ADD_ROW_TEXT) +
                         String.format("enableButtonsInDivWithText('%s' ,'%s');", PARENT_DIV_ID, BTN_EDIT_TEXT);
 
