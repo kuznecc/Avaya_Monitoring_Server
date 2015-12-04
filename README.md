@@ -19,10 +19,3 @@ to find outage reasons and provides resource utilization statistics.
 
 You can set any count of tasks to any servers and schedule each of it all
 for custom periods.
-
-## Author
-Aleksandr Yudin, <aleksandr.v.yudin@gmail.com>
-
-## License
-
-Avaya Monitoring Server is available under the MIT license. See the LICENSE file for more info.
